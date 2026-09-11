@@ -207,7 +207,7 @@ void UAlsCameraComponent::TickCamera(const float DeltaTime, bool bAllowLag)
 		}
 	}
 
-	const auto CameraTargetRotation{Character->GetViewRotation()};
+	const auto CameraTargetRotation{CalculateCharacterViewRotation()};
 
 	const auto PreviousPivotTargetLocation{PivotTargetLocation};
 
@@ -328,6 +328,11 @@ void UAlsCameraComponent::TickCamera(const float DeltaTime, bool bAllowLag)
 	}
 
 	CameraFieldOfView = FMath::Clamp(CameraFieldOfView + CalculateFovOffset(), 5.0f, 175.0f);
+}
+
+FRotator UAlsCameraComponent::CalculateCharacterViewRotation() const
+{
+	return Character->GetViewRotation();
 }
 
 FRotator UAlsCameraComponent::CalculateCameraRotation(const FRotator& CameraTargetRotation,
