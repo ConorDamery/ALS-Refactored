@@ -238,7 +238,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Als Character")
 	void OnRotationModeChanged(FGameplayTag PreviousRotationMode);
 
-	void RefreshRotationMode();
+	virtual void RefreshRotationMode();
 
 	// Desired Stance
 
