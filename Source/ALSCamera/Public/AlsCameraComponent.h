@@ -126,10 +126,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ALS|Camera")
 	void GetViewInfo(FMinimalViewInfo& ViewInfo) const;
 
+protected:
+	virtual FRotator CalculateCharacterViewRotation() const;
+
 private:
 	void TickCamera(float DeltaTime, bool bAllowLag = true);
-
-	virtual FRotator CalculateCharacterViewRotation() const;
 
 	FRotator CalculateCameraRotation(const FRotator& CameraTargetRotation, float DeltaTime, bool bAllowLag) const;
 
