@@ -1219,6 +1219,11 @@ void AAlsCharacter::CorrectViewNetworkSmoothing(const FRotator& TargetRotation)
 	NetworkSmoothing.Duration = NetworkSmoothing.ServerTime - NetworkSmoothing.ClientTime;
 }
 
+FRotator AAlsCharacter::CalculateViewRotation(const FRotator& BaseViewRotation, float DeltaTime)
+{
+	return BaseViewRotation;
+}
+
 void AAlsCharacter::RefreshView(const float DeltaTime)
 {
 	if (MovementBase.bHasRelativeRotation)
@@ -1232,6 +1237,8 @@ void AAlsCharacter::RefreshView(const float DeltaTime)
 
 	ViewState.PreviousYawAngle = UE_REAL_TO_FLOAT(ViewState.Rotation.Yaw);
 
+	const FRotator NewViewRotation = CalculateViewRotation(Super::GetViewRotation(), DeltaTime);
+
 	if (MovementBase.bHasRelativeRotation)
 	{
 		if (IsLocallyControlled())
@@ -1239,7 +1246,7 @@ void AAlsCharacter::RefreshView(const float DeltaTime)
 			// We can't depend on the view rotation sent by the character movement component
 			// since it's in world space, so in this case we always send it ourselves.
 
-			SetReplicatedViewRotation((MovementBase.Rotation.Inverse() * Super::GetViewRotation().Quaternion()).Rotator(), true);
+			SetReplicatedViewRotation((MovementBase.Rotation.Inverse() * NewViewRotation.Quaternion()).Rotator(), true);
 		}
 	}
 	else
@@ -1249,7 +1256,7 @@ void AAlsCharacter::RefreshView(const float DeltaTime)
 			// The character movement component already sends the view rotation to the
 			// server if movement is replicated, so we don't have to do this ourselves.
 
-			SetReplicatedViewRotation(Super::GetViewRotation().GetNormalized(), !IsReplicatingMovement());
+			SetReplicatedViewRotation(NewViewRotation.GetNormalized(), !IsReplicatingMovement());
 		}
 	}
 
